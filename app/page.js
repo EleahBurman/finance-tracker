@@ -1,7 +1,28 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <h1 className="text-2xl font-bold">Hello World</h1>
+    <header className="flex items-center justify-between">
+      { /* User information */ }
+      <div className="flex items-center gap-2">
+        { /* User avatar */ }
+        <div className="h-[40px] w-[40px] rounded-full overflow-hidden">
+          <img
+            className="object-cover w-full h-full"
+            src= "/eleah.jpg" 
+            alt="User avatar" 
+          />
+        </div>
+        { /* User name */ }
+        <small>Hi, Eleah!</small>
+      </div>
+      { /* User navigation */ }
+      <nav className="flex items-center gap-2">
+        <div>
+          Stats Icon
+        </div>
+        <div>
+          Logout Button
+        </div>
+      </nav>
+    </header>
   );
 }
