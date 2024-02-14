@@ -1,3 +1,5 @@
+import  {ImStatsBars} from 'react-icons/im'
+
 export default function Home() {
   return (
     <header className="flex items-center justify-between">
@@ -17,7 +19,7 @@ export default function Home() {
       { /* User navigation */ }
       <nav className="flex items-center gap-2">
         <div>
-          Stats Icon
+          <ImStatsBars />
         </div>
         <div>
           Logout Button
