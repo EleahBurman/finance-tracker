@@ -19,10 +19,12 @@ export default function Home() {
       { /* User navigation */ }
       <nav className="flex items-center gap-2">
         <div>
-          <ImStatsBars />
+          <ImStatsBars className="text-2xl"/>
         </div>
         <div>
-          Logout Button
+          <button className="btn btn-danger">
+            Sign Out
+          </button>
         </div>
       </nav>
     </header>
