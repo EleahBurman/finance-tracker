@@ -1,3 +1,7 @@
+"use client"; // This is a client component 👈🏽
+
+import { useState } from "react";
+
 //import components
 import ExpenseItem from "@/components/ExpenseItem";
 
@@ -32,34 +36,51 @@ const DUMMY_EXPENSES = [
 ]
 
 export default function Home() {
+  const [modalIsOpen, setModalIsOpen] = useState(true);
+
   return (
-    <main className="container max-w-2xl px-6 mx-auto">
-      <section className="py-3">
-        <small className="text-gray-400 text-md">
-          My Balance
-        </small>
-        <h2 className="text-4xl font-bold">
-          { currencyFormatter(10000)}
-        </h2>
-      </section>
-      <section className="flex items-center gap-2 py-3">
-        <button className="btn btn-primary">+ Expenses</button>
-        <button className="btn btn-primary-outline">+ Income</button>
-      </section>
-      {/* Expense List */}
-      <section className="py-6">
-        <h3 className="text-2xl">My Expenses</h3>
-        <div className="flex flex-col gap-4 mt-6">
-          {DUMMY_EXPENSES.map((expense) => { return (
-            <ExpenseItem 
-              color={expense.color}
-              title={expense.title}
-              amount={expense.amount}
-            />
-          )
-        })}
+    <>
+      {/* Modal */}
+      {modalIsOpen && (
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="container mx-auto max-w-2xl h-[80vh] rounded-3xl bg-slate-800 py-6 px-4">
+            <button 
+              className="w-10 h-10 mb-4 font-bold rounded-full bg-slate-600"
+              onClick={()=>{ setModalIsOpen(false)}}>X</button>
+            <h3>I am a modal</h3>
+          </div>
         </div>
-      </section>
-    </main>
+      )}
+      
+      {/* Expenses */}
+      <main className="container max-w-2xl px-6 mx-auto">
+        <section className="py-3">
+          <small className="text-gray-400 text-md">
+            My Balance
+          </small>
+          <h2 className="text-4xl font-bold">
+            { currencyFormatter(10000)}
+          </h2>
+        </section>
+        <section className="flex items-center gap-2 py-3">
+          <button className="btn btn-primary">+ Expenses</button>
+          <button className="btn btn-primary-outline">+ Income</button>
+        </section>
+        {/* Expense List */}
+        <section className="py-6">
+          <h3 className="text-2xl">My Expenses</h3>
+          <div className="flex flex-col gap-4 mt-6">
+            {DUMMY_EXPENSES.map((expense) => { return (
+              <ExpenseItem 
+                color={expense.color}
+                title={expense.title}
+                amount={expense.amount}
+              />
+            )
+          })}
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
