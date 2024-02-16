@@ -43,7 +43,34 @@ export default function Home() {
     <>
       {/* Add Income Modal */}
       < Modal show={showAddIncomeModal} onClose={setShowAddIncomeModal}>
-        <h3>Hello World!</h3>
+        <form className="input-group">
+          <div className="input-group">
+            <label htmlFor="amount">Income Amount</label>
+            <input 
+              type="number"
+              name="amount"
+              min={0.01} 
+              step={0.01} 
+              placeholder="Enter income amount" 
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="description">Description</label>
+            <input 
+              name="description"
+              type="text" 
+              placeholder="Enter income description" 
+              required
+            />
+          </div>
+
+          <button 
+            type="submit"
+            className="btn btn-primary"
+          >Add entry</button>
+        </form>
       </Modal>
       
       {/* Expenses */}
