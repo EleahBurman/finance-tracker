@@ -37,12 +37,14 @@ const DUMMY_EXPENSES = [
 ]
 
 export default function Home() {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [showAddIncomeModal, setShowAddIncomeModal] = useState(false);
 
   return (
     <>
-      {/* Modal */}
-      < Modal show={modalIsOpen} onClose={setModalIsOpen}/>
+      {/* Add Income Modal */}
+      < Modal show={showAddIncomeModal} onClose={setShowAddIncomeModal}>
+        <h3>Hello World!</h3>
+      </Modal>
       
       {/* Expenses */}
       <main className="container max-w-2xl px-6 mx-auto">
@@ -55,8 +57,10 @@ export default function Home() {
           </h2>
         </section>
         <section className="flex items-center gap-2 py-3">
-          <button className="btn btn-primary" onClick={()=>{ setModalIsOpen(true)}}>+ Expenses</button>
-          <button className="btn btn-primary-outline">+ Income</button>
+          <button className="btn btn-primary" >+ Expenses</button>
+          <button 
+            className="btn btn-primary-outline" 
+            onClick={()=>{ setShowAddIncomeModal(true)}}>+ Income</button>
         </section>
         {/* Expense List */}
         <section className="py-6">
