@@ -4,6 +4,7 @@ import { useState } from "react";
 
 //import components
 import ExpenseItem from "@/components/ExpenseItem";
+import Modal from "@/components/Modal";
 
 //import utils
 import { currencyFormatter } from "@/library/utils";
@@ -41,18 +42,7 @@ export default function Home() {
   return (
     <>
       {/* Modal */}
-        <div
-          style={{
-            transform: modalIsOpen ? "translateX(0%)" : "translateX(-200%)",
-          }}
-          className="absolute top-0 left-0 w-full h-full z-10 transition-all duration-500">
-          <div className="container mx-auto max-w-2xl h-[80vh] rounded-3xl bg-slate-800 py-6 px-4">
-            <button 
-              className="w-10 h-10 mb-4 font-bold rounded-full bg-slate-600"
-              onClick={()=>{ setModalIsOpen(false)}}>X</button>
-            <h3>I am a modal</h3>
-          </div>
-        </div>
+      < Modal show={modalIsOpen} onClose={setModalIsOpen}/>
       
       {/* Expenses */}
       <main className="container max-w-2xl px-6 mx-auto">
@@ -73,7 +63,8 @@ export default function Home() {
           <h3 className="text-2xl">My Expenses</h3>
           <div className="flex flex-col gap-4 mt-6">
             {DUMMY_EXPENSES.map((expense) => { return (
-              <ExpenseItem 
+              <ExpenseItem
+                key={expense.id}
                 color={expense.color}
                 title={expense.title}
                 amount={expense.amount}
