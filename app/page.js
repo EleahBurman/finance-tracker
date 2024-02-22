@@ -12,7 +12,11 @@ import { currencyFormatter } from "@/library/utils";
 
 //firebase imports
 import { db } from "@/library/firebase";
-import { collection, addDoc, getDocs, toMillis } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
+
+//icons
+import{FaRegTrashAlt} from 'react-icons/fa'
+
 
 const DUMMY_EXPENSES = [
   {
@@ -74,6 +78,17 @@ export default function Home() {
     
   }
 
+  //delete income
+  const deleteIncomeEntryHandler = async (incomeId) => {
+    const docRef= doc(db, "income", incomeId);
+    
+    try{
+      await deleteDoc(docRef);
+    } catch(error){
+      console.error("Error deleting document: ", error.message)
+    }
+  }
+  
   useEffect(() => {
     const getIncomeData = async () =>{
       const collectionRef= collection(db, "income")
@@ -136,7 +151,12 @@ export default function Home() {
                 <p className="font-semibold">{i.description}</p>
                 <small className="text-xs">{i.createdAt.toISOString()}</small>
               </div>
-              <p className="flex items-center gap-2">{currencyFormatter(i.amount)}</p>
+              <p className="flex items-center gap-2">
+                {currencyFormatter(i.amount)}
+                <button onClick={()=>{deleteIncomeEntryHandler(i.id)}}>
+                  <FaRegTrashAlt />
+                </button>
+              </p>
             </div>
           )
         })}
