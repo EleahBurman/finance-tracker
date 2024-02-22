@@ -72,6 +72,10 @@ export default function Home() {
           ...newIncome
         }]
       });
+
+      //reset form
+      amountRef.current.value = "";
+      descriptionRef.current.value = "";
     }catch(error){
       console.error("Error adding document: ", error.message)
     }
