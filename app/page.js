@@ -61,6 +61,13 @@ export default function Home() {
     const collectionRef = collection(db, "income");
     try{
       const docSnap = await addDoc(collectionRef, newIncome)
+      //update state
+      setIncome((prevIncome) => {
+        return [...prevIncome,{
+          id: docSnap.id,
+          ...newIncome
+        }]
+      });
     }catch(error){
       console.error("Error adding document: ", error.message)
     }
