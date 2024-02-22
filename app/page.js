@@ -84,11 +84,14 @@ export default function Home() {
     
     try{
       await deleteDoc(docRef);
+      // Update the income state to remove the deleted item
+      setIncome(prevIncome => prevIncome.filter(i => i.id !== incomeId));
+
     } catch(error){
       console.error("Error deleting document: ", error.message)
     }
   }
-  
+
   useEffect(() => {
     const getIncomeData = async () =>{
       const collectionRef= collection(db, "income")
