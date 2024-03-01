@@ -59,7 +59,7 @@ export default function Home() {
       < AddIncomeModal 
         show={showAddIncomeModal} 
         onClose={setShowAddIncomeModal} 
-        income={income}/>
+        />
       
       {/* Expenses */}
       <main className="container max-w-2xl px-6 mx-auto">

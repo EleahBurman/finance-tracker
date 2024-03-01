@@ -1,81 +1,51 @@
 //react imports
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 import { currencyFormatter } from '@/library/utils';
+
+import { financeContext } from '@/library/store/finance-context';
 
 //component imports
 import Modal from "@/components/Modal";
 
-//firebase imports
-import { db } from "@/library/firebase";
-import { collection, addDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
-
 //icons
 import{FaRegTrashAlt} from 'react-icons/fa'
 
-function AddIncomeModal({show, onClose, income}){
-
+function AddIncomeModal({show, onClose}){
   const amountRef = useRef();
   const descriptionRef = useRef();
+  const {income, addIncomeItem, removeIncomeItem}= useContext(financeContext);
 
-  //handler functions
   //handler functions
   const addIncomeHandler = async (e) => {
     e.preventDefault();
+
     const newIncome = {
       amount: amountRef.current.value,
       description: descriptionRef.current.value,
       createdAt: new Date()
     }
-    const collectionRef = collection(db, "income");
-    try{
-      const docSnap = await addDoc(collectionRef, newIncome)
-      //update state
-      setIncome((prevIncome) => {
-        return [...prevIncome,{
-          id: docSnap.id,
-          ...newIncome
-        }]
-      });
 
+    try {
+      await addIncomeItem(newIncome)
       //reset form
       amountRef.current.value = "";
       descriptionRef.current.value = "";
-    }catch(error){
-      console.error("Error adding document: ", error.message)
+    } catch (error) { 
+      console.log("Error adding income: ", error.message)
     }
-    
+
   }
 
   //delete income
   const deleteIncomeEntryHandler = async (incomeId) => {
-    const docRef= doc(db, "income", incomeId);
-    
-    try{
-      await deleteDoc(docRef);
-      // Update the income state to remove the deleted item
-      setIncome(prevIncome => prevIncome.filter(i => i.id !== incomeId));
 
-    } catch(error){
-      console.error("Error deleting document: ", error.message)
+    try {
+      await removeIncomeItem(incomeId)
+    } catch (error) {
+      console.log("Error deleting income: ", error.message)
     }
   }
 
-  useEffect(() => {
-    const getIncomeData = async () =>{
-      const collectionRef= collection(db, "income")
-      const docsSnap = await getDocs(collectionRef);
-      const data = docsSnap.docs.map(doc => {
-        return {
-          id: doc.id,
-          ...doc.data(),
-          createdAt: new Date(doc.data().createdAt.toMillis())
-        };
-      });
-      setIncome(data);
-    };
-    getIncomeData();
-  }, []);
-  
   return (
     < Modal 
       show={show} 
@@ -116,7 +86,7 @@ function AddIncomeModal({show, onClose, income}){
 
       <div className="flex flex-col gap-4 mt-6">
         <h3 className="text-2xl font-bold">Income History</h3>
-      {income.map((i) => {
+      {income && income.map((i) => {
         return(
           <div className="flex item-center justify-between"key={i.id}>
             <div>
