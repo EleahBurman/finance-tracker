@@ -1,57 +1,32 @@
 "use client"; // This is a client component 👈🏽
 
 //import react
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 //import components
 import ExpenseItem from "@/components/ExpenseItem";
 
+//import context
+import { financeContext } from "@/library/store/finance-context";
 
 //import utils
 import { currencyFormatter } from "@/library/utils";
 
-//firebase imports
-import { db } from "@/library/firebase";
-import { collection, addDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
-
 //icons
-import{FaRegTrashAlt} from 'react-icons/fa'
 import AddIncomeModal from "@/components/modals/AddIncomeModal";
 
+//chart
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
+import { Doughnut } from "react-chartjs-2";
 
-const DUMMY_EXPENSES = [
-  {
-    id: 1,
-    title: "Entertainment",
-    color: "yellow",
-    amount: 500,
-  },
-  {
-    id: 2,
-    title: "Groceries",
-    color: "blue",
-    amount: 1000,
-  },
-  {
-    id: 3,
-    title: "Travel",
-    color: "green",
-    amount: 5000,
-  },
-  {
-    id: 4,
-    title: "Clothes",
-    color: "pink",
-    amount: 300,
-  }
-]
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Home() {
   //use state variables
-  const [income, setIncome] = useState([]);
-  console.log("look here", income)
   const [showAddIncomeModal, setShowAddIncomeModal] = useState(false);
 
+  //use context
+  const { expenses } = useContext(financeContext);
   
   return (
     <>
@@ -81,15 +56,34 @@ export default function Home() {
         <section className="py-6">
           <h3 className="text-2xl">My Expenses</h3>
           <div className="flex flex-col gap-4 mt-6">
-            {DUMMY_EXPENSES.map((expense) => { return (
+            {expenses.map((expense) => { return (
               <ExpenseItem
                 key={expense.id}
                 color={expense.color}
                 title={expense.title}
-                amount={expense.amount}
+                total={expense.total}
               />
             )
           })}
+          </div>
+        </section>
+
+        {/* Chart Section */}
+        <section className="py-6">
+          <h3 className="text-2xl">Stats</h3>
+          <div className="w-1/2 mx-auto">
+            <Doughnut
+              data={{
+                labels: expenses.map((expense) => expense.title),
+                datasets: [{
+                  label: "Expenses",
+                  data: expenses.map((expense) => expense.total),
+                  backgroundColor: expenses.map((expense) => expense.color),
+                  borderColor: ["#18181b"],
+                  borderWidth: 5,
+                }],
+              }}
+            />
           </div>
         </section>
       </main>
