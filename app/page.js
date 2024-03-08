@@ -1,7 +1,7 @@
 "use client"; // This is a client component 👈🏽
 
 //import react
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 //import components
 import ExpenseItem from "@/components/ExpenseItem";
@@ -24,10 +24,21 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export default function Home() {
   //use state variables
   const [showAddIncomeModal, setShowAddIncomeModal] = useState(false);
-
+  const [balance, setBalance] = useState(0);
   //use context
-  const { expenses } = useContext(financeContext);
+  const { expenses, income } = useContext(financeContext);
   
+  useEffect(() => {
+    const newBalance = 
+    income.reduce((total,i)=>{
+      return total + i.amount
+    }, 0)-
+    expenses.reduce((total, e)=>{
+      return total + e.total
+    }, 0);
+    setBalance(newBalance);
+  }, [income, expenses])
+  ;
   return (
     <>
       {/* Add Income Modal */}
@@ -43,7 +54,7 @@ export default function Home() {
             My Balance
           </small>
           <h2 className="text-4xl font-bold">
-            { currencyFormatter(10000)}
+            { currencyFormatter(balance)}
           </h2>
         </section>
         <section className="flex items-center gap-2 py-3">
