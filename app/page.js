@@ -31,14 +31,16 @@ export default function Home() {
   const { expenses, income } = useContext(financeContext);
   
   useEffect(() => {
-    const newBalance = 
-    income.reduce((total,i)=>{
-      return total + i.amount
-    }, 0)-
-    expenses.reduce((total, e)=>{
-      return total + e.total
-    }, 0);
-    setBalance(newBalance);
+    let newBalance = 0;
+    if(expenses){
+      newBalance = income.reduce((total,i)=>{
+        return total + i.amount
+      }, 0)-
+      expenses.reduce((total, e)=>{
+        return total + e.total
+      }, 0);
+      setBalance(newBalance);
+    }
   }, [income, expenses])
   ;
   return (
@@ -76,7 +78,7 @@ export default function Home() {
         <section className="py-6">
           <h3 className="text-2xl">My Expenses</h3>
           <div className="flex flex-col gap-4 mt-6">
-            {expenses.map((expense) => { return (
+            {expenses?.map((expense) => { return (
               <ExpenseItem
                 key={expense.id}
                 color={expense.color}
@@ -94,11 +96,11 @@ export default function Home() {
           <div className="w-1/2 mx-auto">
             <Doughnut
               data={{
-                labels: expenses.map((expense) => expense.title),
+                labels: expenses?.map((expense) => expense.title) || [],
                 datasets: [{
                   label: "Expenses",
-                  data: expenses.map((expense) => expense.total),
-                  backgroundColor: expenses.map((expense) => expense.color),
+                  data: expenses?.map((expense) => expense.total) || [],
+                  backgroundColor: expenses?.map((expense) => expense.color),
                   borderColor: ["#18181b"],
                   borderWidth: 5,
                 }],

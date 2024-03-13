@@ -63,7 +63,6 @@ function AddIncomeModal({show, onClose}){
             min={0.01} 
             step={0.01} 
             placeholder="Enter income amount" 
-            required
           />
         </div>
 
@@ -74,7 +73,6 @@ function AddIncomeModal({show, onClose}){
             name="description"
             ref={descriptionRef}
             placeholder="Enter income description" 
-            required
           />
         </div>
 

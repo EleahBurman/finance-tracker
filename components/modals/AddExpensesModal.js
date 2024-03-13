@@ -11,9 +11,10 @@ import { v4 as uuidv4 } from 'uuid';
 function AddExpensesModal({show, onClose}){
   const [expenseAmount, setExpenseAmount]= useState("");
   const [selectedCategory, setSelectedCategory]= useState(null);
-  const { expenses } = useContext(financeContext);
   
-  const addExpenseItemHandler = () => {
+  const { expenses, addExpenseItem } = useContext(financeContext);
+  
+  const addExpenseItemHandler = async () => {
     const expense = expenses.find(e=>{
       return e.id === selectedCategory
     })
@@ -30,11 +31,18 @@ function AddExpensesModal({show, onClose}){
         }
       ]
     }
+    try {
+      await addExpenseItem(selectedCategory, newExpense);
 
-    console.log(newExpense)
-    setExpenseAmount("");
-    setSelectedCategory(null);
-    onClose();
+      console.log(newExpense)
+      setExpenseAmount("");
+      setSelectedCategory(null);
+      onClose();
+    }catch (error) {
+      console.log("Error adding expense: ", error.message)
+
+    }
+    
   }
   return(
     <Modal show={show} onClose={onClose}>
@@ -47,13 +55,13 @@ function AddExpensesModal({show, onClose}){
           placeholder="Enter expense amount"
           value={expenseAmount}
           onChange={(e)=>{setExpenseAmount(e.target.value)}}
-          required
         />
       </div>
 
       {/* Add expense categories */}
       {expenseAmount > 0 && (
         <div className="flex flex-col gap-4 mt-6">
+          <h3 className="text-2xl capitalize">Select expense category</h3>
           {expenses.map((expense)=>{ 
             return(
               <button
