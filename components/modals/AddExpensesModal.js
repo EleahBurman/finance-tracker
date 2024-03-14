@@ -12,7 +12,7 @@ function AddExpensesModal({show, onClose}){
   const [expenseAmount, setExpenseAmount]= useState("");
   const [selectedCategory, setSelectedCategory]= useState(null);
   const [showAddExpense, setShowAddExpense] = useState(false);
-  const { expenses, addExpenseItem } = useContext(financeContext);
+  const { expenses, addExpenseItem, addCategory } = useContext(financeContext);
   
   const titleRef = useRef();
   const colorRef= useRef();
@@ -46,6 +46,22 @@ function AddExpensesModal({show, onClose}){
 
     }
     
+  }
+
+  const addCategoryHandler = async () => {
+    const title = titleRef.current.value;
+    const color = colorRef.current.value;
+
+    try {
+      await addCategory({
+        title,
+        color,
+        total: 0,
+      })
+      setShowAddExpense(false);
+    } catch (error) {
+      console.log("Error adding category: ", error.message)
+    }
   }
   return(
     <Modal show={show} onClose={onClose}>
@@ -88,6 +104,7 @@ function AddExpensesModal({show, onClose}){
               />
               <button
                 className="btn btn-primary-outline"
+                onClick={addCategoryHandler}
               >Create</button>
               <button
                 className="btn btn-danger"

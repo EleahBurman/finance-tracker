@@ -12,12 +12,34 @@ export const financeContext = createContext({
   addIncomeItem: async () =>{},
   removeIncomeItem: async () =>{},
   addExpenseItem: async () =>{},
+  addCategory: async () =>{},
 });
 
 export default function FinanceContextProvider({children}){
   const [income, setIncome] = useState([]);
   const [expenses, setExpenses] = useState([]);
   
+  const addCategory = async (category) =>{
+    try {
+      const collectionRef = collection(db, "expenses");
+      const docSnap = await addDoc(collectionRef, {
+        ...category,
+        items:[],
+      })
+      setExpenses(prevExpenses =>{
+        return [
+          ...prevExpenses,
+          {
+            id: docSnap.id,
+            ...category,
+            items: [],
+          }
+        ]
+      })
+    } catch (error){
+      throw error;
+    }
+  }
   const addExpenseItem= async (expenseCategoryId, newExpense)=>{
     const docRef = doc(db, "expenses", expenseCategoryId);
     try{
@@ -25,7 +47,7 @@ export default function FinanceContextProvider({children}){
       //update state
       setExpenses(prevState =>{
         const updatedExpenses = [...prevState];
-        const foundIndex = updatedExpenses.find(expense=>{
+        const foundIndex = updatedExpenses.findIndex(expense=>{
           return expense.id === expenseCategoryId
         });
 
@@ -72,7 +94,7 @@ export default function FinanceContextProvider({children}){
     }
   }
 
-  const values = { income, expenses, addIncomeItem, removeIncomeItem, addExpenseItem}
+  const values = { income, expenses, addIncomeItem, removeIncomeItem, addExpenseItem, addCategory}
   
   useEffect(() => {
     const getIncomeData = async () =>{
