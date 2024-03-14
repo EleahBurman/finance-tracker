@@ -2,7 +2,7 @@
 import Modal from '@/components/Modal'
 
 //react imports
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import { financeContext } from '@/library/store/finance-context';
 
 //uuid imports
@@ -11,9 +11,12 @@ import { v4 as uuidv4 } from 'uuid';
 function AddExpensesModal({show, onClose}){
   const [expenseAmount, setExpenseAmount]= useState("");
   const [selectedCategory, setSelectedCategory]= useState(null);
-  
+  const [showAddExpense, setShowAddExpense] = useState(false);
   const { expenses, addExpenseItem } = useContext(financeContext);
   
+  const titleRef = useRef();
+  const colorRef= useRef();
+
   const addExpenseItemHandler = async () => {
     const expense = expenses.find(e=>{
       return e.id === selectedCategory
@@ -58,10 +61,41 @@ function AddExpensesModal({show, onClose}){
         />
       </div>
 
-      {/* Add expense categories */}
+      {/* Add Expense Categories */}
       {expenseAmount > 0 && (
         <div className="flex flex-col gap-4 mt-6">
-          <h3 className="text-2xl capitalize">Select expense category</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl capitalize">Select expense category</h3>
+            <button
+              className="text-lime-400"
+              onClick={()=>{
+                setShowAddExpense(true);
+              }}>+ New Category</button>
+          </div>
+
+          {showAddExpense && (
+            <div className="flex items-center justify-between">
+              <input 
+                type="text"
+                placeholder="Enter Title"
+                ref={titleRef}
+              />
+              <label>Choose a Color</label>
+              <input 
+                type="color"
+                className="w-24 h-10"
+                ref={colorRef}
+              />
+              <button
+                className="btn btn-primary-outline"
+              >Create</button>
+              <button
+                className="btn btn-danger"
+                onClick={()=>{setShowAddExpense(false)}}
+              >Cancel</button>
+            </div>
+          )}
+
           {expenses.map((expense)=>{ 
             return(
               <button
